@@ -1,8 +1,15 @@
 import { useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useVoiceInput } from '@/hooks/useVoiceInput';
 
 export default function App() {
   const [input, setInput] = useState('');
+
+  const handleVoiceResult = (text) => {
+    setInput((prev) => (prev ? `${prev} ${text}` : text));
+  };
+
+  const { start, stop, listening, supported } = useVoiceInput(handleVoiceResult);
 
   const handleSubmit = () => {
     console.log('User Entry:', input);
@@ -22,6 +29,13 @@ export default function App() {
           value={input}
           onChangeText={setInput}
         />
+
+        {Platform.OS === 'web' && supported && (
+          <Button
+            title={listening ? 'Stop Recording' : 'Start Recording'}
+            onPress={listening ? stop : start}
+          />
+        )}
 
         <Button title="Submit Entry" onPress={handleSubmit} />
       </ScrollView>
