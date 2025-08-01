@@ -6,7 +6,7 @@ This is a mobile app that helps users log their daily health entries using **voi
 
 ## ✨ Features
 
-- 🗣️ Voice-to-text input
+- 🗣️ Voice-to-text input *(web only)*
 - ✍️ Freeform health journal entry
 - 🤖 AI-powered structuring using OpenAI GPT
 - 🔥 Firebase Firestore for daily log storage
