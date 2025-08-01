@@ -48,11 +48,10 @@ npm install
 
 - Download your Firebase Admin SDK JSON file
 - Save it in the root folder
-- Add path to your `.env.local` (optional)
 
-4. Add your OpenAI API Key:
+4. Configure API keys:
 
-You can add this to your environment variables or insert directly in the code (not recommended for production).
+- Set the `FIREBASE_API_KEY` and `OPENAI_KEY` environment variables. You can create an `.env` file or export them in your shell before running the app.
 
 ---
 
