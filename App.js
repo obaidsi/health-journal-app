@@ -1,0 +1,61 @@
+import { useState } from 'react';
+import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+
+export default function App() {
+  const [input, setInput] = useState('');
+
+  const handleSubmit = () => {
+    console.log('User Entry:', input);
+    setInput(''); // Clear the input after submit
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>🧠 Health Journal</Text>
+
+      <ScrollView contentContainerStyle={styles.inputContainer}>
+        <Text style={styles.label}>Describe how you feel:</Text>
+        <TextInput
+          style={styles.textArea}
+          multiline
+          placeholder="Type or speak your journal entry here..."
+          value={input}
+          onChangeText={setInput}
+        />
+
+        <Button title="Submit Entry" onPress={handleSubmit} />
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 24,
+    paddingTop: 60,
+  },
+  header: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    flexGrow: 1,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  textArea: {
+    height: 150,
+    borderColor: '#aaa',
+    borderWidth: 1,
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
+    textAlignVertical: 'top',
+  },
+});
