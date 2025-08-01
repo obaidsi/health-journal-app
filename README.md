@@ -60,7 +60,8 @@ You can add this to your environment variables or insert directly in the code (n
 
 ```
 /health-journal-app
-├── App.js
+├── /app
+│   └── index.tsx
 ├── /assets
 ├── /components
 ├── /screens
