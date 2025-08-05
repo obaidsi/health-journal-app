@@ -10,6 +10,8 @@ import {
   View,
 } from 'react-native';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
+import { fetchStructuredData } from '@/services/openai';
+import { saveToFirebase } from '@/services/firestore';
 
 export default function HomeScreen() {
   const [input, setInput] = useState('');
@@ -21,18 +23,23 @@ export default function HomeScreen() {
 
   const { start, stop, listening, supported } = useVoiceInput(handleVoiceResult);
 
+  async function handleJournalSubmit(text: string) {
+    const structured = await fetchStructuredData(text);
+    await saveToFirebase(structured);
+  }
+
   const handleSubmit = async () => {
     if (!input.trim()) return;
 
     setLoading(true);
     try {
-      // TODO: Call your backend or OpenAI here
-      Alert.alert('Submitted!', input);
-    } catch (error) {
-      Alert.alert('Error', 'Something went wrong.');
+      await handleJournalSubmit(input);
+      Alert.alert('Submitted!', 'Entry saved.');
+      setInput('');
+    } catch (error: any) {
+      Alert.alert('Error', error?.message ?? 'Something went wrong.');
     } finally {
       setLoading(false);
-      setInput('');
     }
   };
 
