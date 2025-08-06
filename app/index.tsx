@@ -16,6 +16,7 @@ import { saveToFirebase } from '@/services/firestore';
 export default function HomeScreen() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleVoiceResult = (text: string) => {
     setInput((prev) => (prev ? `${prev} ${text}` : text));
@@ -24,20 +25,31 @@ export default function HomeScreen() {
   const { start, stop, listening, supported } = useVoiceInput(handleVoiceResult);
 
   async function handleJournalSubmit(text: string) {
-    const structured = await fetchStructuredData(text);
-    await saveToFirebase(structured);
+    console.log('[Journal] Submitting text:', text);
+    try {
+      const structured = await fetchStructuredData(text);
+      console.log('[Journal] Structured result:', structured);
+      await saveToFirebase(structured);
+      console.log('[Journal] Saved to Firebase');
+    } catch (err) {
+      console.error('[Journal] Submission error:', err);
+      throw err;
+    }
   }
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
 
     setLoading(true);
+    setError(null);
     try {
       await handleJournalSubmit(input);
       Alert.alert('Submitted!', 'Entry saved.');
       setInput('');
     } catch (error: any) {
-      Alert.alert('Error', error?.message ?? 'Something went wrong.');
+      const message = error?.message ?? 'Something went wrong.';
+      setError(message);
+      Alert.alert('Error', message);
     } finally {
       setLoading(false);
     }
@@ -65,6 +77,7 @@ export default function HomeScreen() {
           title={loading ? 'Submitting...' : 'Submit'}
           onPress={handleSubmit}
         />
+        {error && <Text style={styles.errorText}>{error}</Text>}
       </ScrollView>
     </View>
   );
@@ -98,5 +111,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 20,
     textAlignVertical: 'top',
+  },
+  errorText: {
+    marginTop: 12,
+    color: 'red',
+    textAlign: 'center',
   },
 });
